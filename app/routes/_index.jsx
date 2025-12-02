@@ -1,9 +1,8 @@
-import {Await, useLoaderData} from 'react-router';
-import {Suspense} from 'react';
+import {useLoaderData} from 'react-router';
 import {HomeHero} from '~/components/HomeHero';
 import {AboutSection} from '~/components/AboutSection';
 import {FeaturedCollectionSection} from '~/components/FeaturedCollectionSection';
-import {ProductItem} from '~/components/ProductItem';
+import {RecommendedProductsSection} from '~/components/RecommendedProductsSection';
 
 /**
  * @type {Route.MetaFunction}
@@ -22,26 +21,24 @@ export async function loader(args) {
 }
 
 async function loadCriticalData({context}) {
-  const [{collections}] = await Promise.all([
+  const [{collections}, recommendedProducts] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
+    context.storefront
+      .query(RECOMMENDED_PRODUCTS_QUERY)
+      .catch((error) => {
+        console.error(error);
+        return null;
+      }),
   ]);
 
   return {
     featuredCollection: collections.nodes[0],
+    recommendedProducts,
   };
 }
 
-function loadDeferredData({context}) {
-  const recommendedProducts = context.storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY)
-    .catch((error) => {
-      console.error(error);
-      return null;
-    });
-
-  return {
-    recommendedProducts,
-  };
+function loadDeferredData() {
+  return {};
 }
 
 export default function Homepage() {
@@ -52,30 +49,8 @@ export default function Homepage() {
       <HomeHero />
       <AboutSection />
       <FeaturedCollectionSection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+      <RecommendedProductsSection products={data.recommendedProducts} />
     </>
-  );
-}
-
-function RecommendedProducts({products}) {
-  return (
-    <div className="recommended-products">
-      <h2>Recommended Products</h2>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          {(response) => (
-            <div className="recommended-products-grid">
-              {response
-                ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
-                : null}
-            </div>
-          )}
-        </Await>
-      </Suspense>
-      <br />
-    </div>
   );
 }
 
