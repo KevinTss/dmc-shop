@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
@@ -8,19 +8,49 @@ import {useAside} from '~/components/Aside';
  */
 export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const {shop, menu} = header;
+  const [isOverlay, setIsOverlay] = useState(false);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const hero = document.getElementById('home-hero');
+    if (!hero) {
+      setIsOverlay(false);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsOverlay(entry.isIntersecting),
+      {threshold: 0.2},
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
+
+  const baseClasses =
+    'fixed inset-x-0 top-0 z-30 flex items-center justify-between px-6 py-4 lg:px-10 transition-colors duration-200';
+  const overlayClasses =
+    'bg-transparent text-brand-bg shadow-none border-none';
+  const solidClasses =
+    'bg-brand-bg/95 text-brand-text shadow-subtle border-b border-brand-accent/10';
+
   return (
-    <header className="fixed inset-x-0 top-0 z-30 flex items-center justify-between px-6 py-4 lg:px-10 text-brand-bg bg-gradient-to-b from-brand-accent/60 via-brand-accent/40 to-transparent backdrop-blur-sm">
+    <header
+      className={`${baseClasses} ${isOverlay ? overlayClasses : solidClasses}`}
+    >
       <NavLink
         prefetch="intent"
         to="/"
         style={activeLinkStyle}
         end
-        className="flex items-center gap-3 text-brand-bg"
+        className={`flex items-center gap-3 ${
+          isOverlay ? 'text-brand-bg' : 'text-brand-text'
+        }`}
       >
         <img
           src="/logo.svg"
           alt={shop.name}
-          className="h-10 w-auto drop-shadow"
+          className={`h-10 w-auto drop-shadow ${
+            isOverlay ? 'brightness-0 invert' : ''
+          }`}
         />
         <span className="sr-only">{shop.name}</span>
       </NavLink>
@@ -29,8 +59,13 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
         viewport="desktop"
         primaryDomainUrl={header.shop.primaryDomain.url}
         publicStoreDomain={publicStoreDomain}
+        isOverlay={isOverlay}
       />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      <HeaderCtas
+        isLoggedIn={isLoggedIn}
+        cart={cart}
+        isOverlay={isOverlay}
+      />
     </header>
   );
 }
@@ -48,10 +83,13 @@ export function HeaderMenu({
   primaryDomainUrl,
   viewport,
   publicStoreDomain,
+  isOverlay = false,
 }) {
   const className = `header-menu-${viewport} ${
     viewport === 'desktop'
-      ? 'hidden lg:flex items-center gap-8 text-brand-bg'
+      ? `hidden lg:flex items-center gap-8 ${
+          isOverlay ? 'text-brand-bg' : 'text-brand-text'
+        }`
       : 'flex flex-col gap-6 text-brand-text'
   }`;
   const {close} = useAside();
@@ -100,9 +138,14 @@ export function HeaderMenu({
 /**
  * @param {Pick<HeaderProps, 'isLoggedIn' | 'cart'>}
  */
-function HeaderCtas({isLoggedIn, cart}) {
+function HeaderCtas({isLoggedIn, cart, isOverlay}) {
   return (
-    <nav className="header-ctas flex items-center gap-4 text-brand-bg" role="navigation">
+    <nav
+      className={`header-ctas flex items-center gap-4 ${
+        isOverlay ? 'text-brand-bg' : 'text-brand-text'
+      }`}
+      role="navigation"
+    >
       <HeaderMenuMobileToggle />
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
         <Suspense fallback="Sign in">
@@ -121,7 +164,7 @@ function HeaderMenuMobileToggle() {
   const {open} = useAside();
   return (
     <button
-      className="header-menu-mobile-toggle reset text-brand-bg"
+      className="header-menu-mobile-toggle reset text-current"
       onClick={() => open('mobile')}
     >
       <h3>☰</h3>
@@ -234,7 +277,7 @@ const FALLBACK_HEADER_MENU = {
 function activeLinkStyle({isActive, isPending}) {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
+    color: isPending ? 'grey' : 'inherit',
   };
 }
 

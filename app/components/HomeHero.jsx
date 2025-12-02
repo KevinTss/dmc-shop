@@ -2,7 +2,7 @@ import {Link} from 'react-router';
 
 export function HomeHero() {
   return (
-    <section className="relative overflow-hidden text-brand-bg">
+    <section id="home-hero" className="relative overflow-hidden text-brand-bg">
       <div className="absolute inset-0">
         <img
           src="/background-advertisement.png"
@@ -25,7 +25,7 @@ export function HomeHero() {
         <div className="flex flex-wrap items-center gap-4">
           <Link
             to="/collections"
-            className="btn-primary bg-brand-bg text-brand-accent hover:bg-brand-bg/90"
+            className="inline-flex items-center justify-center rounded-md bg-white px-6 py-4 leading-5 text-brand-text no-underline transition duration-200 hover:bg-white/90"
           >
             Explore the cellar
           </Link>
