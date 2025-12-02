@@ -32,3 +32,6 @@
 ## Security & Configuration
 - Do not commit real secrets; copy `.env.example` to `.env` and override locally. Required keys include `SESSION_SECRET`, `PUBLIC_STORE_DOMAIN`, and storefront tokens.
 - Use the mock Hydrogen shop values when bootstrapping locally; swap to real store credentials only in private env files.
+
+## Component Structure
+- One React component per file; export components from their own files and import into routes/layouts. Example: keep `AboutSection` in `app/components/AboutSection.jsx` and reference it from `app/routes/_index.jsx`.

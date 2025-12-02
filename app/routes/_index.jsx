@@ -3,6 +3,7 @@ import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
 import {ProductItem} from '~/components/ProductItem';
 import {HomeHero} from '~/components/HomeHero';
+import {AboutSection} from '~/components/AboutSection';
 
 /**
  * @type {Route.MetaFunction}
@@ -66,6 +67,7 @@ export default function Homepage() {
   return (
     <>
       <HomeHero />
+      <AboutSection />
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
     </>
