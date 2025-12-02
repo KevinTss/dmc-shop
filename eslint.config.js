@@ -154,7 +154,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: './tsconfig.eslint.json',
+        project: './tsconfig.json',
         tsconfigRootDir: __dirname,
         ecmaFeatures: {
           jsx: true,
