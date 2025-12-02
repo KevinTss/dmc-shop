@@ -105,6 +105,7 @@ export default [
     plugins: {
       react: fixupPluginRules(react),
       'jsx-a11y': fixupPluginRules(jsxA11Y),
+      import: fixupPluginRules(_import),
     },
     settings: {
       react: {
