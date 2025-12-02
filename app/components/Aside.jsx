@@ -39,18 +39,34 @@ export function Aside({children, heading, type}) {
   return (
     <div
       aria-modal
-      className={`overlay ${expanded ? 'expanded' : ''}`}
       role="dialog"
+      className={`fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm transition-all duration-200 ${
+        expanded ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+      }`}
     >
-      <button className="close-outside" onClick={close} />
-      <aside>
-        <header>
-          <h3>{heading}</h3>
-          <button className="close reset" onClick={close} aria-label="Close">
+      <button
+        className="sr-only"
+        onClick={close}
+        aria-label="Close aside overlay"
+      />
+      <aside
+        className={`h-full w-full max-w-[420px] bg-white text-brand-text shadow-2xl transition-transform duration-200 lg:max-w-[480px] ${
+          expanded ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <header className="flex items-center justify-between border-b border-brand-accent/10 px-6 py-4">
+          <h3 className="m-0 text-lg font-semibold">{heading}</h3>
+          <button
+            className="close reset text-2xl font-semibold text-brand-text"
+            onClick={close}
+            aria-label="Close"
+          >
             &times;
           </button>
         </header>
-        <main>{children}</main>
+        <main className="h-[calc(100%-64px)] overflow-y-auto px-6 py-4">
+          {children}
+        </main>
       </aside>
     </div>
   );

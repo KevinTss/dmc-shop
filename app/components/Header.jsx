@@ -9,9 +9,20 @@ import {useAside} from '~/components/Aside';
 export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const {shop, menu} = header;
   return (
-    <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+    <header className="fixed inset-x-0 top-0 z-30 flex items-center justify-between px-6 py-4 lg:px-10 text-brand-bg bg-gradient-to-b from-brand-accent/60 via-brand-accent/40 to-transparent backdrop-blur-sm">
+      <NavLink
+        prefetch="intent"
+        to="/"
+        style={activeLinkStyle}
+        end
+        className="flex items-center gap-3 text-brand-bg"
+      >
+        <img
+          src="/logo.svg"
+          alt={shop.name}
+          className="h-10 w-auto drop-shadow"
+        />
+        <span className="sr-only">{shop.name}</span>
       </NavLink>
       <HeaderMenu
         menu={menu}
@@ -38,7 +49,11 @@ export function HeaderMenu({
   viewport,
   publicStoreDomain,
 }) {
-  const className = `header-menu-${viewport}`;
+  const className = `header-menu-${viewport} ${
+    viewport === 'desktop'
+      ? 'hidden lg:flex items-center gap-8 text-brand-bg'
+      : 'flex flex-col gap-6 text-brand-text'
+  }`;
   const {close} = useAside();
 
   return (
@@ -87,7 +102,7 @@ export function HeaderMenu({
  */
 function HeaderCtas({isLoggedIn, cart}) {
   return (
-    <nav className="header-ctas" role="navigation">
+    <nav className="header-ctas flex items-center gap-4 text-brand-bg" role="navigation">
       <HeaderMenuMobileToggle />
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
         <Suspense fallback="Sign in">
@@ -106,7 +121,7 @@ function HeaderMenuMobileToggle() {
   const {open} = useAside();
   return (
     <button
-      className="header-menu-mobile-toggle reset"
+      className="header-menu-mobile-toggle reset text-brand-bg"
       onClick={() => open('mobile')}
     >
       <h3>☰</h3>

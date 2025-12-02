@@ -21,16 +21,11 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["app/*"]
+      "~/*": ["./app/*"]
     }
   },
-  "files": [
-    "env.d.ts",
-    "app/entry.client.tsx",
-    "app/entry.server.tsx",
-    "app/lib/context.ts"
-  ],
   "include": [
+    "env.d.ts",
     "app/**/*.{js,jsx,ts,tsx,d.ts}",
     "*.config.{js,ts}",
     "*.js",
