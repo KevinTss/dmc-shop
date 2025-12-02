@@ -9,7 +9,7 @@
     "dev": "shopify hydrogen dev --codegen",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
-    "codegen": "shopify hydrogen codegen && react-router typegen",
+    "codegen": "NODE_OPTIONS=\"--require ./scripts/patch-cpus.cjs\" shopify hydrogen codegen && react-router typegen",
     "typecheck": "tsc --noEmit"
   },
   "prettier": "@shopify/prettier-config",
