@@ -2,6 +2,7 @@ import {useLoaderData} from 'react-router';
 import {getPaginationVariables} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
+import {ProductsHero} from '~/components/ProductsHero';
 
 /**
  * @type {Route.MetaFunction}
@@ -58,20 +59,26 @@ export default function Collection() {
   const {products} = useLoaderData();
 
   return (
-    <div className="collection">
-      <h1>Products</h1>
-      <PaginatedResourceSection
-        connection={products}
-        resourcesClassName="products-grid"
-      >
-        {({node: product, index}) => (
-          <ProductItem
-            key={product.id}
-            product={product}
-            loading={index < 8 ? 'eager' : undefined}
-          />
-        )}
-      </PaginatedResourceSection>
+    <div className="bg-brand-bg text-brand-text">
+      <ProductsHero
+        title="Products"
+        description="Explore the full lineup. Thoughtfully crafted goods ready for your cart."
+      />
+
+      <section className="mx-auto max-w-6xl px-6 pb-16 lg:pb-20">
+        <PaginatedResourceSection
+          connection={products}
+          resourcesClassName="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {({node: product, index}) => (
+            <ProductItem
+              key={product.id}
+              product={product}
+              loading={index < 8 ? 'eager' : undefined}
+            />
+          )}
+        </PaginatedResourceSection>
+      </section>
     </div>
   );
 }
