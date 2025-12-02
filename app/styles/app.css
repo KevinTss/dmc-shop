@@ -16,6 +16,34 @@ img {
   border-radius: 4px;
 }
 
+body {
+  @apply bg-brand-bg text-brand-text font-sans text-body antialiased;
+}
+
+h1 {
+  @apply text-h1 font-semibold;
+}
+
+h2 {
+  @apply text-h2 font-semibold;
+}
+
+a {
+  @apply text-brand-accent underline-offset-4 decoration-2 hover:text-brand-primary;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-md bg-brand-primary text-brand-bg font-medium tracking-wide shadow-subtle transition duration-200 hover:bg-brand-accent;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center px-4 py-3 rounded-md text-brand-accent border border-brand-accent/30 hover:border-brand-accent hover:bg-brand-accent/5;
+}
+
+.card {
+  @apply rounded-md bg-white shadow-subtle border border-brand-accent/5;
+}
+
 /*
 * --------------------------------------------------
 * Non anchor links
