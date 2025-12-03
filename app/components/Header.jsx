@@ -27,8 +27,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
 
   const baseClasses =
     'fixed inset-x-0 top-0 z-30 flex items-center justify-between px-6 py-4 lg:px-10 transition-colors duration-200';
-  const overlayClasses =
-    'bg-transparent text-brand-bg shadow-none border-none';
+  const overlayClasses = 'bg-transparent text-brand-bg shadow-none border-none';
   const solidClasses =
     'bg-brand-bg/95 text-brand-text shadow-subtle border-b border-brand-accent/10';
 
@@ -61,11 +60,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
         publicStoreDomain={publicStoreDomain}
         isOverlay={isOverlay}
       />
-      <HeaderCtas
-        isLoggedIn={isLoggedIn}
-        cart={cart}
-        isOverlay={isOverlay}
-      />
+      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} isOverlay={isOverlay} />
     </header>
   );
 }
