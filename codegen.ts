@@ -3,7 +3,7 @@ import {getSchema, pluckConfig, preset} from '@shopify/hydrogen-codegen';
 
 const sharedDocuments = ['./*.{ts,tsx,js,jsx}', './app/**/*.{ts,tsx,js,jsx}'];
 
-export default {
+const config = {
   overwrite: true,
   concurrency: 1,
   pluckConfig,
@@ -22,4 +22,6 @@ export default {
       documents: ['./app/graphql/customer-account/**/*.{ts,tsx,js,jsx}'],
     },
   },
-} satisfies CodegenConfig;
+} as CodegenConfig;
+
+export default config;
