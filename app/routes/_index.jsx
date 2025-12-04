@@ -1,7 +1,7 @@
 import {useLoaderData} from 'react-router';
 import {HomeHero} from '~/components/HomeHero';
 import {AboutSection} from '~/components/AboutSection';
-import {FeaturedCollectionSection} from '~/components/FeaturedCollectionSection';
+// import {FeaturedCollectionSection} from '~/components/FeaturedCollectionSection';
 import {RecommendedProductsSection} from '~/components/RecommendedProductsSection';
 
 /**
@@ -23,12 +23,10 @@ export async function loader(args) {
 async function loadCriticalData({context}) {
   const [{collections}, recommendedProducts] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
-    context.storefront
-      .query(RECOMMENDED_PRODUCTS_QUERY)
-      .catch((error) => {
-        console.error(error);
-        return null;
-      }),
+    context.storefront.query(RECOMMENDED_PRODUCTS_QUERY).catch((error) => {
+      console.error(error);
+      return null;
+    }),
   ]);
 
   return {
@@ -48,7 +46,7 @@ export default function Homepage() {
     <>
       <HomeHero />
       <AboutSection />
-      <FeaturedCollectionSection collection={data.featuredCollection} />
+      {/* <FeaturedCollectionSection collection={data.featuredCollection} /> */}
       <RecommendedProductsSection products={data.recommendedProducts} />
     </>
   );

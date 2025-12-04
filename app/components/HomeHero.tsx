@@ -25,7 +25,7 @@ export function HomeHero() {
         </p>
         <div className="flex flex-wrap items-center gap-4">
           <Link
-            to="/collections"
+            to="/collections/all"
             className="inline-flex items-center justify-center rounded-md bg-white px-6 py-4 leading-5 text-brand-text no-underline transition duration-200 hover:bg-white/90"
           >
             Explore the cellar
