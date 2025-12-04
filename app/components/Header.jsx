@@ -1,5 +1,5 @@
 import {Suspense, useEffect, useMemo, useState} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
+import {Await, NavLink, useAsyncValue, useLocation} from 'react-router';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
 
@@ -9,6 +9,7 @@ import {useAside} from '~/components/Aside';
 export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const {shop, menu} = header;
   const [isOverlay, setIsOverlay] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -18,25 +19,29 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
       return;
     }
     const observer = new IntersectionObserver(
-      ([entry]) => setIsOverlay(entry.isIntersecting),
+      ([entry]) => {
+        setIsOverlay(entry.isIntersecting);
+      },
       {threshold: 0.2},
     );
     observer.observe(hero);
+    // Set initial state in case the observer callback hasn't fired yet
+    setIsOverlay(hero.getBoundingClientRect().top < window.innerHeight * 0.8);
     return () => observer.disconnect();
-  }, []);
+  }, [location.pathname]);
 
   const variant = useMemo(() => (isOverlay ? 'overlay' : 'solid'), [isOverlay]);
 
   const baseClasses =
-    'fixed inset-x-0 top-0 z-30 grid h-[85px] grid-cols-3 items-center border-b border-white/20 transition-colors duration-200';
+    'fixed inset-x-0 top-0 z-30 flex h-[85px] justify-between items-center border-b transition-colors duration-200 px-4 sm:px-6 lg:px-12';
   const variantClasses =
     variant === 'overlay'
-      ? 'bg-transparent text-white'
-      : 'bg-brand-bg text-brand-text shadow-subtle';
+      ? 'bg-transparent text-white border-white/20'
+      : 'bg-brand-bg text-brand-text border-brand-primary/20';
 
   return (
     <header className={`${baseClasses} ${variantClasses}`}>
-      <div className="flex items-center pl-16 md:pl-16 sm:pl-4">
+      <div className="flex items-center">
         <NavLink
           prefetch="intent"
           to="/"
@@ -141,12 +146,9 @@ export function HeaderMenu({
 /**
  * @param {Pick<HeaderProps, 'isLoggedIn' | 'cart'>}
  */
-function HeaderCtas({isLoggedIn, cart, isOverlay}) {
+function HeaderCtas({cart, isOverlay}) {
   return (
-    <nav
-      className="flex items-center justify-end gap-4 pr-16 sm:pr-4"
-      role="navigation"
-    >
+    <nav className="flex items-center justify-end gap-4" role="navigation">
       <div className="flex items-center lg:hidden">
         <HeaderMenuMobileToggle />
       </div>
@@ -180,20 +182,20 @@ function HeaderMenuMobileToggle() {
   );
 }
 
-function SearchToggle() {
-  const {open} = useAside();
-  return (
-    <button
-      className="hidden h-[51px] w-[200px] items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 text-sm text-white backdrop-blur md:flex"
-      onClick={() => open('search')}
-    >
-      <span role="img" aria-hidden>
-        🔍
-      </span>
-      <span className="text-white/90">Search</span>
-    </button>
-  );
-}
+// function SearchToggle() {
+//   const {open} = useAside();
+//   return (
+//     <button
+//       className="hidden h-[51px] w-[200px] items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 text-sm text-white backdrop-blur md:flex"
+//       onClick={() => open('search')}
+//     >
+//       <span role="img" aria-hidden>
+//         🔍
+//       </span>
+//       <span className="text-white/90">Search</span>
+//     </button>
+//   );
+// }
 
 /**
  * @param {{count: number | null}}
