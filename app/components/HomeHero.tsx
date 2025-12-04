@@ -1,4 +1,4 @@
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 
 export function HomeHero() {
   return (
@@ -9,7 +9,8 @@ export function HomeHero() {
           alt="Exclusive spirits background"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-bl from-brand-accent/40 via-brand-accent/65 to-brand-primary/70" />
+        {/* <div className="absolute inset-0 bg-gradient-to-bl from-brand-accent/40 via-brand-accent/65 to-brand-primary/70" /> */}
+        <div className="absolute inset-0 bg-gradient-to-bl from-black/10 via-black/25 to-black/20" />
       </div>
       <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-8 px-6 py-20 md:py-24 lg:py-28">
         <p className="uppercase tracking-[0.2em] text-sm text-brand-bg/80">
