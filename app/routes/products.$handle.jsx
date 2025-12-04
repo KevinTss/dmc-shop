@@ -1,4 +1,5 @@
-import {useLoaderData} from 'react-router';
+import {Suspense} from 'react';
+import {Await, useLoaderData, useRouteLoaderData} from 'react-router';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -11,6 +12,7 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {QuantityAdjuster} from '~/components/QuantityAdjuster';
 
 /**
  * @type {Route.MetaFunction}
@@ -86,6 +88,8 @@ function loadDeferredData() {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product} = useLoaderData();
+  const root = useRouteLoaderData('root');
+  const cart = root?.cart;
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -126,12 +130,12 @@ export default function Product() {
             />
           </div>
 
-          <div className="rounded-lg border border-brand-accent/10 bg-white p-4 shadow-subtle/40">
-            <ProductForm
-              productOptions={productOptions}
-              selectedVariant={selectedVariant}
-            />
-          </div>
+          <ProductQuantityControls
+            cart={cart}
+            variantId={selectedVariant?.id}
+            productOptions={productOptions}
+            selectedVariant={selectedVariant}
+          />
         </div>
       </div>
       <div className="mx-auto max-w-6xl px-6 pb-16 lg:pb-20">
@@ -161,6 +165,44 @@ export default function Product() {
         }}
       />
     </div>
+  );
+}
+
+function ProductQuantityControls({
+  cart,
+  variantId,
+  productOptions,
+  selectedVariant,
+}) {
+  if (!variantId || !cart) return null;
+  return (
+    <Suspense fallback={null}>
+      <Await resolve={cart} errorElement={null}>
+        {(resolvedCart) => {
+          const line = resolvedCart?.lines?.nodes?.find(
+            (l) => l.merchandise.id === variantId,
+          );
+          return (
+            <div className="rounded-lg border border-brand-accent/10 bg-white p-4 shadow-subtle/40">
+              {line ? (
+                <div className="mt-2">
+                  <QuantityAdjuster
+                    lineId={line.id}
+                    quantity={line.quantity ?? 0}
+                    isOptimistic={line.isOptimistic}
+                  />
+                </div>
+              ) : (
+                <ProductForm
+                  productOptions={productOptions}
+                  selectedVariant={selectedVariant}
+                />
+              )}
+            </div>
+          );
+        }}
+      </Await>
+    </Suspense>
   );
 }
 

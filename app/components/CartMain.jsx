@@ -1,6 +1,6 @@
 import {useOptimisticCart} from '@shopify/hydrogen';
-import {Link} from 'react-router';
-import {useAside} from '~/components/Aside';
+// import {Link} from 'react-router';
+// import {useAside} from '~/components/Aside';
 import {CartLineItem} from '~/components/CartLineItem';
 import {CartSummary} from './CartSummary';
 
@@ -51,7 +51,7 @@ export function CartMain({layout, cart: originalCart}) {
  * }}
  */
 function CartEmpty({hidden = false}) {
-  const {close} = useAside();
+  // const {close} = useAside();
   return (
     <div hidden={hidden}>
       <br />
@@ -59,10 +59,10 @@ function CartEmpty({hidden = false}) {
         Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
         started!
       </p>
-      <br />
+      {/* <br />
       <Link to="/collections" onClick={close} prefetch="viewport">
         Continue shopping →
-      </Link>
+      </Link> */}
     </div>
   );
 }
