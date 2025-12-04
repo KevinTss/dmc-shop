@@ -1,4 +1,4 @@
-import {Suspense, useEffect, useState} from 'react';
+import {Suspense, useEffect, useMemo, useState} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
@@ -25,42 +25,51 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
     return () => observer.disconnect();
   }, []);
 
+  const variant = useMemo(() => (isOverlay ? 'overlay' : 'solid'), [isOverlay]);
+
   const baseClasses =
-    'fixed inset-x-0 top-0 z-30 flex items-center justify-between px-6 py-4 lg:px-10 transition-colors duration-200';
-  const overlayClasses = 'bg-transparent text-brand-bg shadow-none border-none';
-  const solidClasses =
-    'bg-brand-bg/95 text-brand-text shadow-subtle border-b border-brand-accent/10';
+    'fixed inset-x-0 top-0 z-30 grid h-[85px] grid-cols-3 items-center border-b border-white/20 transition-colors duration-200';
+  const variantClasses =
+    variant === 'overlay'
+      ? 'bg-transparent text-white'
+      : 'bg-brand-bg text-brand-text shadow-subtle';
 
   return (
-    <header
-      className={`${baseClasses} ${isOverlay ? overlayClasses : solidClasses}`}
-    >
-      <NavLink
-        prefetch="intent"
-        to="/"
-        style={activeLinkStyle}
-        end
-        className={`flex items-center gap-3 ${
-          isOverlay ? 'text-brand-bg' : 'text-brand-text'
-        }`}
-      >
-        <img
-          src="/logo.svg"
-          alt={shop.name}
-          className={`h-10 w-auto drop-shadow ${
-            isOverlay ? 'brightness-0 invert' : ''
-          }`}
+    <header className={`${baseClasses} ${variantClasses}`}>
+      <div className="flex items-center pl-16 md:pl-16 sm:pl-4">
+        <NavLink
+          prefetch="intent"
+          to="/"
+          style={activeLinkStyle}
+          end
+          className="flex items-center gap-3"
+        >
+          <img
+            src="/logo.svg"
+            alt={shop.name}
+            className={`h-10 w-auto drop-shadow ${
+              variant === 'overlay' ? 'brightness-0 invert' : ''
+            }`}
+          />
+          <span className="sr-only">{shop.name}</span>
+        </NavLink>
+      </div>
+
+      <div className="hidden items-center justify-center gap-12 lg:flex">
+        <HeaderMenu
+          menu={menu}
+          viewport="desktop"
+          primaryDomainUrl={header.shop.primaryDomain.url}
+          publicStoreDomain={publicStoreDomain}
+          isOverlay={variant === 'overlay'}
         />
-        <span className="sr-only">{shop.name}</span>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-        isOverlay={isOverlay}
+      </div>
+
+      <HeaderCtas
+        isLoggedIn={isLoggedIn}
+        cart={cart}
+        isOverlay={variant === 'overlay'}
       />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} isOverlay={isOverlay} />
     </header>
   );
 }
@@ -80,13 +89,12 @@ export function HeaderMenu({
   publicStoreDomain,
   isOverlay = false,
 }) {
-  const className = `header-menu-${viewport} ${
+  const className =
     viewport === 'desktop'
-      ? `hidden lg:flex items-center gap-8 ${
-          isOverlay ? 'text-brand-bg' : 'text-brand-text'
+      ? `flex items-center gap-12 text-sm font-medium uppercase tracking-[0.14em] ${
+          isOverlay ? 'text-white' : 'text-brand-text'
         }`
-      : 'flex flex-col gap-6 text-brand-text'
-  }`;
+      : 'flex flex-col gap-6 text-brand-text';
   const {close} = useAside();
 
   return (
@@ -136,21 +144,26 @@ export function HeaderMenu({
 function HeaderCtas({isLoggedIn, cart, isOverlay}) {
   return (
     <nav
-      className={`header-ctas flex items-center gap-4 ${
-        isOverlay ? 'text-brand-bg' : 'text-brand-text'
-      }`}
+      className="flex items-center justify-end gap-4 pr-16 sm:pr-4"
       role="navigation"
     >
-      <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
+      <div className="flex items-center lg:hidden">
+        <HeaderMenuMobileToggle />
+      </div>
+      {/* <NavLink
+        prefetch="intent"
+        to="/account"
+        style={activeLinkStyle}
+        className="hidden text-sm font-semibold uppercase tracking-[0.14em] lg:inline-flex"
+      >
         <Suspense fallback="Sign in">
           <Await resolve={isLoggedIn} errorElement="Sign in">
             {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
           </Await>
         </Suspense>
-      </NavLink>
-      <SearchToggle />
-      <CartToggle cart={cart} />
+      </NavLink> */}
+      {/* <SearchToggle isOverlay={isOverlay} /> */}
+      <CartToggle cart={cart} isOverlay={isOverlay} />
     </nav>
   );
 }
@@ -170,8 +183,14 @@ function HeaderMenuMobileToggle() {
 function SearchToggle() {
   const {open} = useAside();
   return (
-    <button className="reset" onClick={() => open('search')}>
-      Search
+    <button
+      className="hidden h-[51px] w-[200px] items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 text-sm text-white backdrop-blur md:flex"
+      onClick={() => open('search')}
+    >
+      <span role="img" aria-hidden>
+        🔍
+      </span>
+      <span className="text-white/90">Search</span>
     </button>
   );
 }
@@ -179,7 +198,7 @@ function SearchToggle() {
 /**
  * @param {{count: number | null}}
  */
-function CartBadge({count}) {
+function CartBadge({count, isOverlay}) {
   const {open} = useAside();
   const {publish, shop, cart, prevCart} = useAnalytics();
 
@@ -196,8 +215,11 @@ function CartBadge({count}) {
           url: window.location.href || '',
         });
       }}
+      className="relative inline-flex h-12 w-12 items-center justify-center rounded-md transition hover:bg-white/10"
+      aria-label="Cart"
     >
-      Cart {count === null ? <span>&nbsp;</span> : count}
+      <span className="text-2xl grayscale">{isOverlay ? '🛒' : '🛍️'}</span>
+      <Badge count={count} />
     </a>
   );
 }
@@ -205,20 +227,29 @@ function CartBadge({count}) {
 /**
  * @param {Pick<HeaderProps, 'cart'>}
  */
-function CartToggle({cart}) {
+function CartToggle({cart, isOverlay}) {
   return (
-    <Suspense fallback={<CartBadge count={null} />}>
+    <Suspense fallback={<CartBadge count={null} isOverlay={isOverlay} />}>
       <Await resolve={cart}>
-        <CartBanner />
+        <CartBanner isOverlay={isOverlay} />
       </Await>
     </Suspense>
   );
 }
 
-function CartBanner() {
+function CartBanner({isOverlay}) {
   const originalCart = useAsyncValue();
   const cart = useOptimisticCart(originalCart);
-  return <CartBadge count={cart?.totalQuantity ?? 0} />;
+  return <CartBadge count={cart?.totalQuantity ?? 0} isOverlay={isOverlay} />;
+}
+
+function Badge({count}) {
+  if (count === null) return null;
+  return (
+    <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-primary text-xs font-bold text-white">
+      {count}
+    </span>
+  );
 }
 
 const FALLBACK_HEADER_MENU = {
