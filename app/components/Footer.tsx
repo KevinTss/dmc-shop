@@ -1,5 +1,5 @@
-import {Link} from 'react-router';
-import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
+import { Link } from 'react-router';
+import type { FooterQuery, HeaderQuery } from 'storefrontapi.generated';
 
 type FooterProps = {
   footer: Promise<FooterQuery | null>;
@@ -7,26 +7,21 @@ type FooterProps = {
   publicStoreDomain: string;
 };
 
-export function Footer({footer: _footerPromise, header}: FooterProps) {
+export function Footer({ footer: _footerPromise, header }: FooterProps) {
   // NOTE: The footer menu query is temporarily disabled in favor of static content.
   // When ready to re-enable, restore the Suspense + Await block that consumes `footer`.
 
-  const logoUrl = header.shop.brand?.logo?.image?.url;
+  // const logoUrl = header.shop.brand?.logo?.image?.url;
 
   return (
     <footer className="bg-brand-primary text-white">
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-24 sm:grid-cols-2 lg:grid-cols-4">
         <div className="flex items-start">
-          {logoUrl ? (
-            <img
-              src={logoUrl}
-              alt={header.shop.name}
-              className="h-14 w-auto"
-              loading="lazy"
-            />
-          ) : (
-            <span className="text-xl font-semibold">{header.shop.name}</span>
-          )}
+          <img
+            src="/logo.svg"
+            alt={header.shop.name}
+            className="h-20 w-auto drop-shadow brightness-0 invert"
+          />
         </div>
 
         <FooterColumn
@@ -40,9 +35,8 @@ export function Footer({footer: _footerPromise, header}: FooterProps) {
         <FooterColumn
           title="Online shop"
           links={[
-            {label: 'Home', to: '/'},
-            {label: 'Shop', to: '/collections/all'},
-            {label: 'Contact', to: '/contact'},
+            { label: 'Home', to: '/' },
+            { label: 'Catalog', to: '/collections/all' },
           ]}
         />
       </div>
@@ -51,17 +45,17 @@ export function Footer({footer: _footerPromise, header}: FooterProps) {
 }
 
 type FooterColumnProps =
-  | {title: string; lines: string[]; links?: never}
+  | { title: string; lines: string[]; links?: never }
   | {
-      title: string;
-      lines?: never;
-      links: {label: string; to: string}[];
-    };
+    title: string;
+    lines?: never;
+    links: { label: string; to: string }[];
+  };
 
-function FooterColumn({title, lines, links}: FooterColumnProps) {
+function FooterColumn({ title, lines, links }: FooterColumnProps) {
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-white/80">
+      <h3 className="text-sm font-semibold tracking-[0.16em] text-white">
         {title}
       </h3>
       {lines ? (
@@ -72,7 +66,7 @@ function FooterColumn({title, lines, links}: FooterColumnProps) {
         </div>
       ) : null}
       {links ? (
-        <div className="space-y-2 text-sm">
+        <div className="space-y-2 text-sm flex flex-col">
           {links.map((link) => (
             <Link
               key={link.to}

@@ -53,7 +53,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
           <img
             src="/logo.svg"
             alt={shop.name}
-            className={`h-10 w-auto drop-shadow ${
+            className={`h-14 w-auto drop-shadow ${
               variant === 'overlay' ? 'brightness-0 invert' : ''
             }`}
           />
