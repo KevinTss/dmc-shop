@@ -63,6 +63,7 @@ export default function Collection() {
       <ProductsHero
         title="Products"
         description="Explore the full lineup. Thoughtfully crafted goods ready for your cart."
+        backgroundImage="/background-advertisement.png"
       />
 
       <section className="mx-auto max-w-6xl px-6 pb-16 lg:pb-20">

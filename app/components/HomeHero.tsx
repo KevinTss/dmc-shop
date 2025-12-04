@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 
 export function HomeHero() {
   return (
-    <section id="home-hero" className="relative overflow-hidden text-brand-bg">
+    <section id="hero" className="relative overflow-hidden text-brand-bg">
       <div className="absolute inset-0">
         <img
           src="/background-advertisement.png"

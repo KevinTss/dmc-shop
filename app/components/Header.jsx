@@ -13,7 +13,8 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
-    const hero = document.getElementById('home-hero');
+    const hero =
+      document.getElementById('hero') || document.getElementById('hero');
     if (!hero) {
       setIsOverlay(false);
       return;
@@ -96,7 +97,7 @@ export function HeaderMenu({
 }) {
   const className =
     viewport === 'desktop'
-      ? `flex items-center gap-12 text-sm font-medium uppercase tracking-[0.14em] ${
+      ? `flex items-center gap-4 text-sm font-medium uppercase tracking-[0.14em] ${
           isOverlay ? 'text-white' : 'text-brand-text'
         }`
       : 'flex flex-col gap-6 text-brand-text';
@@ -127,7 +128,7 @@ export function HeaderMenu({
             : item.url;
         return (
           <NavLink
-            className="header-menu-item"
+            className="header-menu-item transition duration-200 hover:text-brand-primary hover:bg-brand-primary/10 px-5 py-2 rounded-full"
             end
             key={item.id}
             onClick={close}
