@@ -22,18 +22,24 @@ export function CartMain({layout, cart: originalCart}) {
   const cartHasItems = cart?.totalQuantity ? cart.totalQuantity > 0 : false;
 
   return (
-    <div className={className}>
-      <CartEmpty hidden={linesCount} layout={layout} />
-      <div className="cart-details">
-        <div aria-labelledby="cart-lines">
-          <ul>
-            {(cart?.lines?.nodes ?? []).map((line) => (
-              <CartLineItem key={line.id} line={line} layout={layout} />
-            ))}
-          </ul>
+    <div className={`${className} flex h-full flex-col`}>
+      <div className="flex-1 overflow-y-auto">
+        <CartEmpty hidden={linesCount} layout={layout} />
+        <div className="cart-details">
+          <div aria-labelledby="cart-lines">
+            <ul>
+              {(cart?.lines?.nodes ?? []).map((line) => (
+                <CartLineItem key={line.id} line={line} layout={layout} />
+              ))}
+            </ul>
+          </div>
         </div>
-        {cartHasItems && <CartSummary cart={cart} layout={layout} />}
       </div>
+      {cartHasItems && (
+        <div className="border-t border-brand-accent/10 bg-white px-4 pb-4 pt-3">
+          <CartSummary cart={cart} layout={layout} />
+        </div>
+      )}
     </div>
   );
 }

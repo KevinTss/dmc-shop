@@ -6,11 +6,14 @@ import {useFetcher} from 'react-router';
  * @param {CartSummaryProps}
  */
 export function CartSummary({cart, layout}) {
-  const className =
-    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside';
+  const isAside = layout === 'aside';
+  const className = isAside ? 'cart-summary-aside' : 'cart-summary-page';
 
   return (
-    <div aria-labelledby="cart-summary" className={className}>
+    <div
+      aria-labelledby="cart-summary"
+      className={`${className} ${isAside ? 'sticky bottom-0 left-0 right-0 bg-white' : ''}`}
+    >
       <h4>Totals</h4>
       <dl className="cart-subtotal">
         <dt>Subtotal</dt>
@@ -24,21 +27,29 @@ export function CartSummary({cart, layout}) {
       </dl>
       <CartDiscounts discountCodes={cart?.discountCodes} />
       <CartGiftCard giftCardCodes={cart?.appliedGiftCards} />
-      <CartCheckoutActions checkoutUrl={cart?.checkoutUrl} />
+      <CartCheckoutActions checkoutUrl={cart?.checkoutUrl} layout={layout} />
     </div>
   );
 }
 
 /**
- * @param {{checkoutUrl?: string}}
+ * @param {{checkoutUrl?: string; layout: CartLayout}}
  */
-function CartCheckoutActions({checkoutUrl}) {
+function CartCheckoutActions({checkoutUrl, layout}) {
   if (!checkoutUrl) return null;
 
+  const isAside = layout === 'aside';
+
   return (
-    <div>
-      <a href={checkoutUrl} target="_self">
-        <p>Continue to Checkout &rarr;</p>
+    <div className={isAside ? 'sticky bottom-0 left-0 right-0 pt-4' : undefined}>
+      <a
+        href={checkoutUrl}
+        target="_self"
+        className={`block w-full rounded-md px-4 py-3 text-center text-sm font-semibold uppercase tracking-[0.1em] text-white transition ${
+          isAside ? 'bg-brand-primary hover:bg-brand-primary/90' : 'bg-brand-accent hover:bg-brand-accent/90'
+        }`}
+      >
+        Continue to Checkout →
       </a>
       <br />
     </div>

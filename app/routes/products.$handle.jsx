@@ -106,27 +106,44 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <div className="product-main">
-        <h1>{title}</h1>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
-        />
-        <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
-        </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
+    <div className="bg-brand-bg text-brand-text pt-14">
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 pt-28 lg:grid-cols-2 lg:py-24">
+        <div className="flex items-start justify-center">
+          <div className="w-full max-w-xl overflow-hidden rounded-lg">
+            <ProductImage image={selectedVariant?.image} />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <div className="space-y-2">
+            <p className="text-sm uppercase tracking-[0.16em] text-brand-accent/70">
+              {product.vendor}
+            </p>
+            <h1 className="text-3xl font-semibold lg:text-4xl">{title}</h1>
+            <ProductPrice
+              price={selectedVariant?.price}
+              compareAtPrice={selectedVariant?.compareAtPrice}
+            />
+          </div>
+
+          <div className="rounded-lg border border-brand-accent/10 bg-white p-4 shadow-subtle/40">
+            <ProductForm
+              productOptions={productOptions}
+              selectedVariant={selectedVariant}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mx-auto max-w-6xl px-6 pb-16 lg:pb-20">
+        <div className="space-y-3">
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-brand-accent/70">
+            Description
+          </p>
+          <div
+            className="prose prose-sm max-w-none text-brand-text/90"
+            dangerouslySetInnerHTML={{__html: descriptionHtml}}
+          />
+        </div>
       </div>
       <Analytics.ProductView
         data={{

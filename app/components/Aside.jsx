@@ -41,7 +41,9 @@ export function Aside({children, heading, type}) {
       aria-modal
       role="dialog"
       className={`fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm transition-all duration-200 ${
-        expanded ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        expanded
+          ? 'opacity-100 pointer-events-auto'
+          : 'opacity-0 pointer-events-none'
       }`}
     >
       <button
@@ -50,7 +52,7 @@ export function Aside({children, heading, type}) {
         aria-label="Close aside overlay"
       />
       <aside
-        className={`h-full w-full max-w-[420px] bg-white text-brand-text shadow-2xl transition-transform duration-200 lg:max-w-[480px] ${
+        className={`m-2 h-[calc(100%-16px)] w-full max-w-[420px] rounded-lg bg-white text-brand-text shadow-2xl transition-transform duration-200 lg:max-w-[480px] ${
           expanded ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
